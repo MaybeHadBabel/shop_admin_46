@@ -15,7 +15,7 @@
   <el-container>
     <el-aside width="200px">
       <el-menu
-      default-active='1-1'
+      router
       unique-opened
       background-color="#545c64"
       text-color="#fff"
@@ -25,7 +25,7 @@
           <i class="el-icon-location"></i>
           <span>用户管理</span>
         </template>
-        <el-menu-item index="1-1">
+        <el-menu-item index="users">
           <i class="el-icon-menu"></i>
           <span slot="title">用户列表</span>
         </el-menu-item>
@@ -56,16 +56,17 @@
 <script>
 export default {
   methods: {
-    logout () {
-      this.$confirm('亲，确定要退出系统吗？？', '温馨提示', {
-        type: 'warning'
-      }).then(() => {
+    async logout () {
+      try {
+        await this.$confirm('亲，确定要退出系统吗？？', '温馨提示', {
+          type: 'warning'
+        })
         this.$message('成功退出')
         localStorage.removeItem('token')
         this.$router.push('/login')
-      }).catch((e) => {
+      } catch (e) {
         console.log(e)
-      })
+      }
     }
   }
 }

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data () {
     return {
@@ -28,10 +28,10 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: ['blur', 'change'] },
-          { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: ['blur', 'change'] }
+          { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: ['blur', 'change'] }
         ],
         password: [
-          { required: true, message: '请输入用户名', trigger: ['blur', 'change'] },
+          { required: true, message: '请输入密码', trigger: ['blur', 'change'] },
           { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: ['blur', 'change'] }
         ]
       }
@@ -41,28 +41,48 @@ export default {
     resetForm () {
       this.$refs.form.resetFields()
     },
-    login () {
-      this.$refs.form.validate(valid => {
-        if (!valid) return
-        axios.post('http://localhost:8888/api/private/v1/login', this.form).then(res => {
-          console.log(res)
-          const { meta, data } = res.data
-          if (meta.status === 200) {
-            localStorage.setItem('token', data.token)
-            this.$router.push('/index')
-            this.$message({
-              message: meta.msg,
-              duration: 1000,
-              type: 'success'
-            })
-          } else {
-            this.$message({
-              message: meta.msg,
-              duration: 1000
-            })
-          }
-        })
-      })
+    // login () {
+    //   this.$refs.form.validate(valid => {
+    //     if (!valid) return
+    //     this.$axios.post('login', this.form).then(res => {
+    //       console.log(res)
+    //       const { meta, data } = res
+    //       if (meta.status === 200) {
+    //         localStorage.setItem('token', data.token)
+    //         this.$router.push('/index')
+    //         this.$message({
+    //           message: meta.msg,
+    //           duration: 1000,
+    //           type: 'success'
+    //         })
+    //       } else {
+    //         this.$message({
+    //           message: meta.msg,
+    //           duration: 1000
+    //         })
+    //       }
+    //     })
+    //   })
+    // },
+    async login () {
+      try {
+        await this.$refs.form.validate()
+        // 校验通过，发送ajax请求
+        const { meta, data } = await this.$axios.post('login', this.form)
+        if (meta.status === 200) {
+          localStorage.setItem('token', data.token)
+          this.$message({
+            message: meta.msg,
+            duration: 1000,
+            type: 'success'
+          })
+          this.$router.push('/index')
+        } else {
+          this.$message.error(meta.msg)
+        }
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }

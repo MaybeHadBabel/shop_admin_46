@@ -5,6 +5,11 @@ import Index from './components/Index.vue'
 import Users from './components/Users.vue'
 
 Vue.use(Router)
+// 解决多次点击相同路由报错的bug
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 const router = new Router({
   routes: [
