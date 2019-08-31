@@ -61,13 +61,5 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
-.rights {
-  .el-breadcrumb {
-    height: 40px;
-    line-height: 40px;
-    border-bottom: 1px solid #c5c5c5;
-    margin-bottom: 10px;
-  }
-}
+<style>
 </style>

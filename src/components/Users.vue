@@ -293,12 +293,6 @@ export default {
   .el-pagination {
     margin-top: 10px;
   }
-  .el-breadcrumb {
-    margin-bottom: 10px;
-    border-bottom: 1px solid #C5C5C5;
-    height: 40px;
-    line-height: 40px;
-  }
   .input-with-select {
     margin-bottom: 10px;
     width: 300px;

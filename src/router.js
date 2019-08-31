@@ -4,6 +4,7 @@ import Login from './components/Login.vue'
 import Index from './components/Index.vue'
 import Users from './components/Users.vue'
 import Rights from './components/Rights.vue'
+import Roles from './components/Roles.vue'
 
 Vue.use(Router)
 // 解决多次点击相同路由报错的bug
@@ -32,6 +33,11 @@ const router = new Router({
           path: '/rights',
           name: 'rights',
           component: Rights
+        },
+        {
+          path: '/roles',
+          name: 'roles',
+          component: Roles
         }
       ]
     },

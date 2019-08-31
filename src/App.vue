@@ -19,4 +19,12 @@ export default {
     width: 100%;
     height: 100%;
   }
+  #app {
+    .el-breadcrumb {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #C5C5C5;
+    height: 40px;
+    line-height: 40px;
+  }
+  }
 </style>
