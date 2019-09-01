@@ -51,7 +51,7 @@
       <template v-slot:default='obj'>
         <el-button type="primary" icon="el-icon-edit" size='small' plain @click='showEditDialog(obj.row)'></el-button>
         <el-button type="danger" icon="el-icon-delete" size='small' plain @click='delUser(obj.row.id)'></el-button>
-        <el-button type="success" icon="el-icon-check" size='small' plain>分配角色</el-button>
+        <el-button type="success" icon="el-icon-check" size='small' plain @click='assignRole(obj.row)'>分配角色</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -97,8 +97,8 @@
   :visible.sync="editVisible"
   width="40%">
     <el-form ref='editForm' :model='editForm' :rules='rules' label-width="100px">
-      <el-form-item label="用户名" prop='username'>
-        admin
+      <el-form-item label="用户名">
+        <el-tag type='info'>{{ editForm.username }}</el-tag>
       </el-form-item>
       <el-form-item label="邮箱" prop='email'>
         <el-input v-model="editForm.email" placeholder="请输入邮箱"></el-input>
@@ -112,6 +112,24 @@
       <el-button type="primary" @click='update'>确 定</el-button>
     </span>
   </el-dialog>
+
+  <!-- 分配角色功能对话框 -->
+  <el-dialog title='分配角色' :visible.sync="assignRoleVisible" width="40%">
+    <el-form ref='assignForm' :model='assignForm' label-width='100px'>
+      <el-form-item label='用户名'>
+        <el-tag type='info'>{{ assignForm.username }}</el-tag>
+      </el-form-item>
+      <el-form-item label='角色列表'>
+        <el-select v-model='assignForm.rid' placeholder='请选择角色'>
+          <el-option v-for='item in rolesList' :label='item.roleName' :key='item.id' :value='item.id'></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="assignRoleVisible = false">取 消</el-button>
+      <el-button type="primary" @click='assignRoleToUser'>确 定</el-button>
+    </span>
+  </el-dialog>
 </div>
 </template>
 
@@ -120,6 +138,13 @@
 export default {
   data () {
     return {
+      rolesList: [],
+      assignForm: {
+        username: '',
+        id: '',
+        rid: ''
+      },
+      assignRoleVisible: false,
       query: '',
       pagenum: 1,
       pagesize: 2,
@@ -172,13 +197,14 @@ export default {
             pagesize: this.pagesize
           }
         })
+        console.log(data)
         this.total = data.total
         // console.log(this.total)
         if (meta.status === 200) {
           this.userList = data.users
           // console.log(this.userList)
         } else {
-          this.$message('meta.msg')
+          this.$message(meta.msg)
         }
       } catch (e) {
         console.log(e)
@@ -283,6 +309,37 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    async assignRole (row) {
+      this.assignRoleVisible = true
+      this.assignForm.username = row.username
+      this.assignForm.id = row.id
+      // 根据用户id获取，发送ajax请求获取角色id
+      const res = await this.$axios.get(`users/${row.id}`)
+      // console.log(res)
+      if (res.meta.status === 200) {
+        // rid为-1则表示此用户没有分配角色
+        const rid = res.data.rid
+        this.assignForm.rid = rid === -1 ? '' : rid
+      }
+      const { meta, data } = await this.$axios.get('roles')
+      if (meta.status === 200) {
+        this.rolesList = data
+      } else {
+        this.$message.error(meta.msg)
+      }
+    },
+    async assignRoleToUser () {
+      const { id, rid } = this.assignForm
+      // console.log(id, rid)
+      if (rid === '') {
+        this.$message.error('请选择用户角色')
+        return
+      }
+      const { meta } = await this.$axios.put(`users/${id}/role`, { rid })
+      this.$message.success(meta.msg)
+      // console.log(res)
+      this.assignRoleVisible = false
     }
   }
 }
