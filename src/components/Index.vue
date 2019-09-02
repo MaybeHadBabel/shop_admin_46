@@ -16,32 +16,19 @@
     <el-aside width="200px">
       <el-menu
       router
+      :default-active='defaultUrl'
       unique-opened
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
-      <el-submenu index="1">
+      <el-submenu :index="item.path" v-model='menuList' v-for='item in menuList' :key='item.id'>
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>用户管理</span>
+          <span>{{item.authName}}</span>
         </template>
-        <el-menu-item index="users">
+        <el-menu-item :index="info.path" v-for='info in item.children' :key='info.id'>
           <i class="el-icon-menu"></i>
-          <span slot="title">用户列表</span>
-        </el-menu-item>
-      </el-submenu>
-      <el-submenu index="2">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>权限管理</span>
-        </template>
-        <el-menu-item index="roles">
-          <i class="el-icon-menu"></i>
-          <span slot="title">角色列表</span>
-        </el-menu-item>
-        <el-menu-item index="rights">
-          <i class="el-icon-menu"></i>
-          <span slot="title">权限列表</span>
+          <span slot="title">{{info.authName}}</span>
         </el-menu-item>
       </el-submenu>
     </el-menu>
@@ -55,6 +42,20 @@
 
 <script>
 export default {
+  data () {
+    return {
+      menuList: []
+    }
+  },
+  async created () {
+    const { meta, data } = await this.$axios.get('menus')
+    if (meta.status === 200) {
+      this.menuList = data
+      // console.log(this.$route)
+    } else {
+      this.$message.error(meta.msg)
+    }
+  },
   methods: {
     async logout () {
       try {
@@ -67,6 +68,11 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    }
+  },
+  computed: {
+    defaultUrl () {
+      return this.$route.path.slice(1)
     }
   }
 }
