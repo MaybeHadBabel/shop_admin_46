@@ -2,9 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './components/Login.vue'
 import Index from './components/Index.vue'
-import Users from './components/Users.vue'
-import Rights from './components/Rights.vue'
-import Roles from './components/Roles.vue'
+import Users from './components/users/Users.vue'
+import Rights from './components/rightscontol/Rights.vue'
+import Roles from './components/rightscontol/Roles.vue'
+import Goods from './components/products/Goods.vue'
+import GoodsAdd from './components/products/GoodsAdd.vue'
 
 Vue.use(Router)
 // 解决多次点击相同路由报错的bug
@@ -38,6 +40,16 @@ const router = new Router({
           path: '/roles',
           name: 'roles',
           component: Roles
+        },
+        {
+          path: '/goods',
+          name: 'goods',
+          component: Goods
+        },
+        {
+          path: '/goods-add',
+          name: 'goods-add',
+          component: GoodsAdd
         }
       ]
     },

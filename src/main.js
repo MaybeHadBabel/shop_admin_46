@@ -2,8 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import moment from 'moment'
+import quill from 'vue-quill-editor'
+import 'element-ui/lib/theme-chalk/index.css'
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
@@ -28,8 +34,13 @@ axios.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   return Promise.reject(error)
 })
+// 全局的时间过滤器
+Vue.filter('dateFilter', value => {
+  // 此处用的是以秒为单位的时间戳，只有10位数，应该x1000转换位以毫秒位单位的13位数的时间戳
+  return moment(value * 1000).format('YYYY-MM-DD HH:mm:ss')
+})
 Vue.use(ElementUI)
-
+Vue.use(quill)
 new Vue({
   router,
   render: h => h(App)
