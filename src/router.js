@@ -7,6 +7,7 @@ import Rights from './components/rightscontol/Rights.vue'
 import Roles from './components/rightscontol/Roles.vue'
 import Goods from './components/products/Goods.vue'
 import GoodsAdd from './components/products/GoodsAdd.vue'
+import Categories from './components/products/Categories.vue'
 
 Vue.use(Router)
 // 解决多次点击相同路由报错的bug
@@ -50,6 +51,11 @@ const router = new Router({
           path: '/goods-add',
           name: 'goods-add',
           component: GoodsAdd
+        },
+        {
+          path: '/categories',
+          name: '/categories',
+          component: Categories
         }
       ]
     },

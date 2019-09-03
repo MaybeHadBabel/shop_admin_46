@@ -29,6 +29,14 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   response = response.data
+  // 只要响应的 meta.status === 401 说明token失效了(伪造, 过期的),
+  // 清除无效的token, 拦截到登录去
+  if (response.meta.status === 401) {
+    localStorage.removeItem('token')
+    response.meta.msg = '登录状态已失效, 请重新登录'
+    // this.$router.push(....)  this.$router拿到的是整个的路由对象
+    router.push('/login')
+  }
   return response
 }, function (error) {
   // 对响应错误做点什么
